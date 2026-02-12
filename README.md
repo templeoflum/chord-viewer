@@ -2,6 +2,8 @@
 
 Visual chord explorer — pick a root, toggle chord types, see what lights up on a two-octave keyboard and chromatic circle.
 
+**[Try it live](https://templeoflum.github.io/chord-viewer/)**
+
 ## Features
 
 - Fixed two-octave piano keyboard (C to C)
