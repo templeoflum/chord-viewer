@@ -1,12 +1,12 @@
 # Chord Viewer
 
-Visual chord explorer — pick a root, toggle chord types, see what lights up on a two-octave keyboard and chromatic circle.
+Visual chord explorer — pick a root, toggle chord types, see what lights up on a three-octave keyboard and chromatic circle.
 
 **[Try it live](https://templeoflum.github.io/chord-viewer/)**
 
 ## Features
 
-- Fixed two-octave piano keyboard (C to C)
+- Fixed three-octave piano keyboard (C to C)
 - 24 chord types: triads, 7ths, extended chords
 - Interval labels on active keys (R, ♭3, 5, ♭7, etc.)
 - Chromatic circle showing chord geometry

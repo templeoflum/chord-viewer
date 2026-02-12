@@ -44,10 +44,10 @@ const CATEGORIES = {
   "Extended": ["6th", "Min6", "Add9", "Maj9", "Min9", "Dom9", "Maj11", "Min11", "Maj13"],
 };
 
-// Fixed keyboard: 25 semitones = C3 to C5 (two full octaves, always the same layout)
-// That gives us 15 white keys (C D E F G A B x2 + final C)
-const TOTAL_KEYS = 25;
-const WHITE_COUNT = 15;
+// Fixed keyboard: 37 semitones = C3 to C6 (three full octaves, always the same layout)
+// That gives us 22 white keys (C D E F G A B x3 + final C)
+const TOTAL_KEYS = 37;
+const WHITE_COUNT = 22;
 
 export default function ChordViewer() {
   const [root, setRoot] = useState(0); // 0=C, stored as pitch class
@@ -148,8 +148,8 @@ export default function ChordViewer() {
         </div>
       </div>
 
-      {/* Fixed two-octave piano */}
-      <div style={{ width: "100%", maxWidth: "800px" }}>
+      {/* Fixed three-octave piano */}
+      <div style={{ width: "100%", maxWidth: "1000px" }}>
         <svg viewBox="0 0 100 36" style={{ width: "100%", display: "block" }} preserveAspectRatio="xMidYMid meet">
           {/* White keys first (behind) */}
           {pianoData.whites.map((k) => (
@@ -158,10 +158,10 @@ export default function ChordViewer() {
                 fill={k.isRoot ? "#c084fc" : k.isActive ? "#7c3aed" : "#151520"}
                 stroke={k.isActive ? "#a78bfa" : "#252535"} strokeWidth={0.2} />
               {k.isActive && k.interval && (
-                <text x={k.x + k.w / 2} y={27.5} textAnchor="middle" fontSize="2.4" fontWeight="700"
+                <text x={k.x + k.w / 2} y={27.5} textAnchor="middle" fontSize="1.8" fontWeight="700"
                   fill={k.isRoot ? "#0a0a0f" : "#e0e0e0"}>{k.interval}</text>
               )}
-              <text x={k.x + k.w / 2} y={32} textAnchor="middle" fontSize="1.5"
+              <text x={k.x + k.w / 2} y={32} textAnchor="middle" fontSize="1.2"
                 fill={k.isActive ? (k.isRoot ? "#0a0a0f" : "#a78bfa") : "#3a3a4a"}>{k.noteName}</text>
             </g>
           ))}
@@ -172,7 +172,7 @@ export default function ChordViewer() {
                 fill={k.isRoot ? "#c084fc" : k.isActive ? "#7c3aed" : "#08080d"}
                 stroke={k.isActive ? "#a78bfa" : "#181825"} strokeWidth={0.2} />
               {k.isActive && k.interval && (
-                <text x={k.x + k.w / 2} y={17} textAnchor="middle" fontSize="2" fontWeight="700"
+                <text x={k.x + k.w / 2} y={17} textAnchor="middle" fontSize="1.5" fontWeight="700"
                   fill={k.isRoot ? "#0a0a0f" : "#e0e0e0"}>{k.interval}</text>
               )}
             </g>
