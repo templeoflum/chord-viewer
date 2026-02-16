@@ -4,7 +4,7 @@ import {
   getDiatonicChords, CHORD_TYPES, INTERVAL_NAMES, getParentScale,
 } from "../../utils/musicConstants.js";
 
-const PIANO_KEYS = 13;
+const BASE_OCTAVE = 13; // one octave span
 import PianoKeyboard from "../shared/PianoKeyboard.jsx";
 import ChromaticCircle from "../shared/ChromaticCircle.jsx";
 
@@ -32,21 +32,22 @@ export default function ScalesTab() {
   const [selectedDiatonic, setSelectedDiatonic] = useState(null);
 
   const intervals = SCALE_TYPES[scaleType];
+  const pianoKeys = root + BASE_OCTAVE; // enough keys to show full octave from root
 
   // Scale notes as dim keys (background layer)
   const scaleKeys = useMemo(() => {
     const map = new Map();
-    for (let octaveOffset = 0; octaveOffset < PIANO_KEYS; octaveOffset += 12) {
+    for (let octaveOffset = 0; octaveOffset < pianoKeys; octaveOffset += 12) {
       intervals.forEach((iv, idx) => {
         const pos = root + octaveOffset + iv;
-        if (pos >= 0 && pos < PIANO_KEYS) {
+        if (pos >= 0 && pos < pianoKeys) {
           const label = idx < SCALE_DEGREE_LABELS.length ? SCALE_DEGREE_LABELS[idx] : (idx + 1).toString();
           map.set(pos, label);
         }
       });
     }
     return map;
-  }, [root, intervals]);
+  }, [root, intervals, pianoKeys]);
 
   const scaleNotesMod12 = useMemo(
     () => [...new Set(intervals.map(i => (root + i) % 12))],
@@ -67,10 +68,10 @@ export default function ScalesTab() {
 
     // Build active keys for chord
     const activeMap = new Map();
-    for (let octaveOffset = 0; octaveOffset < PIANO_KEYS; octaveOffset += 12) {
+    for (let octaveOffset = 0; octaveOffset < pianoKeys; octaveOffset += 12) {
       for (const iv of chordIntervals) {
         const pos = chordRoot + octaveOffset + iv;
-        if (pos >= 0 && pos < PIANO_KEYS) {
+        if (pos >= 0 && pos < pianoKeys) {
           activeMap.set(pos, INTERVAL_NAMES[iv]);
         }
       }
@@ -78,7 +79,7 @@ export default function ScalesTab() {
 
     const notesMod12 = [...new Set(chordIntervals.map(i => (chordRoot + i) % 12))];
     return { activeKeys: activeMap, notesMod12, chordRoot };
-  }, [selectedDiatonic, diatonicChords, root, intervals, scaleType]);
+  }, [selectedDiatonic, diatonicChords, root, intervals, scaleType, pianoKeys]);
 
   const parentInfo = useMemo(() => getParentScale(root, scaleType), [root, scaleType]);
 
@@ -105,7 +106,7 @@ export default function ScalesTab() {
         )}
       </div>
 
-      <PianoKeyboard activeKeys={showActiveKeys} dimKeys={showDimKeys} onKeyClick={setRoot} totalKeys={PIANO_KEYS} />
+      <PianoKeyboard activeKeys={showActiveKeys} dimKeys={showDimKeys} onKeyClick={setRoot} totalKeys={pianoKeys} />
 
       {/* Root selector */}
       <div style={{ display: "flex", gap: "6px", flexWrap: "wrap", justifyContent: "center", maxWidth: "520px" }}>
