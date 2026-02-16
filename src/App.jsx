@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { COLORS } from "./utils/musicConstants.js";
+import useIsMobile from "./hooks/useIsMobile.js";
 import ChordsTab from "./components/tabs/ChordsTab.jsx";
 import ScalesTab from "./components/tabs/ScalesTab.jsx";
 import CircleOfFifthsTab from "./components/tabs/CircleOfFifthsTab.jsx";
@@ -31,6 +32,7 @@ const TAB_GROUPS = [
 const ALL_TABS = TAB_GROUPS.flatMap(g => g.tabs);
 
 export default function App() {
+  const isMobile = useIsMobile();
   const [activeTab, setActiveTab] = useState("chords");
   const ActiveComponent = ALL_TABS.find(t => t.key === activeTab).component;
 
@@ -38,7 +40,7 @@ export default function App() {
     <div style={{
       minHeight: "100vh", background: COLORS.bg, color: COLORS.text,
       fontFamily: "'JetBrains Mono', 'SF Mono', 'Fira Code', monospace",
-      padding: "24px", display: "flex", flexDirection: "column", alignItems: "center", gap: "24px",
+      padding: isMobile ? "16px 10px" : "24px", display: "flex", flexDirection: "column", alignItems: "center", gap: isMobile ? "18px" : "24px",
     }}>
       {/* Grouped tab bar */}
       <div style={{ display: "flex", gap: "16px", flexWrap: "wrap", justifyContent: "center", alignItems: "flex-start" }}>

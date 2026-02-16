@@ -4,7 +4,7 @@ import { COLORS, generateFrequencyTable } from "../../utils/musicConstants.js";
 const allRows = generateFrequencyTable();
 
 const cellStyle = {
-  padding: "5px 12px", borderBottom: "1px solid " + COLORS.borderDark,
+  padding: "7px 12px", borderBottom: "1px solid " + COLORS.borderDark,
 };
 const headerCellStyle = {
   ...cellStyle, color: COLORS.dimmer,
@@ -46,7 +46,7 @@ export default function FrequenciesTab() {
         }}
       />
 
-      <div style={{ width: "100%", maxWidth: "600px", maxHeight: "60vh", overflowY: "auto", borderRadius: "8px", border: "1px solid " + COLORS.borderDark }}>
+      <div style={{ width: "100%", maxWidth: "600px", maxHeight: "60vh", overflowY: "auto", borderRadius: "8px", border: "1px solid " + COLORS.borderDark, WebkitOverflowScrolling: "touch" }}>
         <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "13px" }}>
           <thead>
             <tr>

@@ -1,9 +1,11 @@
-import { useMemo } from "react";
+import { useMemo, useRef, useCallback, useEffect } from "react";
 import { NOTES, isBlackNote, COLORS } from "../../utils/musicConstants.js";
 
 export default function PianoKeyboard({ activeKeys, dimKeys, onKeyClick, totalKeys = 25 }) {
+  const svgRef = useRef(null);
+  const lastNoteRef = useRef(null);
+
   const pianoData = useMemo(() => {
-    // Count white keys for this totalKeys value
     let whiteCount = 0;
     for (let i = 0; i < totalKeys; i++) {
       if (!isBlackNote(i % 12)) whiteCount++;
@@ -50,12 +52,80 @@ export default function PianoKeyboard({ activeKeys, dimKeys, onKeyClick, totalKe
       }
     }
 
-    return { whites, blacks };
+    return { whites, blacks, whiteW };
   }, [activeKeys, dimKeys, totalKeys]);
+
+  // Map screen coords to a note on the keyboard
+  const getKeyAtPoint = useCallback((clientX, clientY) => {
+    const svg = svgRef.current;
+    if (!svg) return null;
+    const rect = svg.getBoundingClientRect();
+    // Convert to viewBox coords (0-100 x, 0-36 y)
+    const vx = ((clientX - rect.left) / rect.width) * 100;
+    const vy = ((clientY - rect.top) / rect.height) * 36;
+    if (vx < 0 || vx > 100 || vy < 0 || vy > 36) return null;
+
+    // Check black keys first (only if in upper portion)
+    if (vy <= 21) {
+      for (const k of pianoData.blacks) {
+        if (vx >= k.x + 0.1 && vx <= k.x + k.w - 0.1) {
+          return k.noteInOctave;
+        }
+      }
+    }
+    // Check white keys
+    for (const k of pianoData.whites) {
+      if (vx >= k.x + 0.15 && vx <= k.x + k.w - 0.15) {
+        return k.noteInOctave;
+      }
+    }
+    return null;
+  }, [pianoData]);
+
+  // Touch handlers attached via useEffect with { passive: false }
+  useEffect(() => {
+    const svg = svgRef.current;
+    if (!svg) return;
+
+    const handleTouchStart = (e) => {
+      e.preventDefault();
+      const touch = e.touches[0];
+      const note = getKeyAtPoint(touch.clientX, touch.clientY);
+      if (note !== null) {
+        lastNoteRef.current = note;
+        onKeyClick(note);
+      }
+    };
+
+    const handleTouchMove = (e) => {
+      e.preventDefault();
+      const touch = e.touches[0];
+      const note = getKeyAtPoint(touch.clientX, touch.clientY);
+      if (note !== null && note !== lastNoteRef.current) {
+        lastNoteRef.current = note;
+        onKeyClick(note);
+      }
+    };
+
+    const handleTouchEnd = (e) => {
+      e.preventDefault();
+      lastNoteRef.current = null;
+    };
+
+    svg.addEventListener("touchstart", handleTouchStart, { passive: false });
+    svg.addEventListener("touchmove", handleTouchMove, { passive: false });
+    svg.addEventListener("touchend", handleTouchEnd, { passive: false });
+
+    return () => {
+      svg.removeEventListener("touchstart", handleTouchStart);
+      svg.removeEventListener("touchmove", handleTouchMove);
+      svg.removeEventListener("touchend", handleTouchEnd);
+    };
+  }, [getKeyAtPoint, onKeyClick]);
 
   return (
     <div style={{ width: "100%", maxWidth: "1000px" }}>
-      <svg viewBox="0 0 100 36" style={{ width: "100%", display: "block" }} preserveAspectRatio="xMidYMid meet">
+      <svg ref={svgRef} viewBox="0 0 100 36" style={{ width: "100%", display: "block", touchAction: "none" }} preserveAspectRatio="xMidYMid meet">
         {pianoData.whites.map((k) => (
           <g key={"w" + k.pos} onClick={() => onKeyClick(k.noteInOctave)} style={{ cursor: "pointer" }}>
             <rect x={k.x + 0.15} y={0} width={k.w - 0.3} height={34} rx={0.6}

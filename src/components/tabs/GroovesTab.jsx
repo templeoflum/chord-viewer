@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { COLORS, GROOVE_PATTERNS, GROOVE_CATEGORIES } from "../../utils/musicConstants.js";
+import useIsMobile from "../../hooks/useIsMobile.js";
 
 const ROW_COLORS = {
   kick: "#e05050",
@@ -11,6 +12,7 @@ const ROW_LABELS = ["Kick", "Snare", "Hi-hat"];
 const ROW_KEYS = ["kick", "snare", "hihat"];
 
 export default function GroovesTab() {
+  const isMobile = useIsMobile();
   const [selectedGroove, setSelectedGroove] = useState("Four on the Floor");
 
   const groove = GROOVE_PATTERNS[selectedGroove];
@@ -19,8 +21,8 @@ export default function GroovesTab() {
   const stepsPerBeat = steps / beatsPerMeasure;
 
   // Grid dimensions
-  const cellW = 28;
-  const cellH = 28;
+  const cellW = isMobile ? 36 : 28;
+  const cellH = isMobile ? 36 : 28;
   const labelW = 56;
   const headerH = 20;
   const gridW = labelW + steps * cellW;
@@ -39,7 +41,7 @@ export default function GroovesTab() {
       </div>
 
       {/* Grid visualization */}
-      <div style={{ overflowX: "auto", maxWidth: "100%" }}>
+      <div style={{ overflowX: "auto", maxWidth: "100%", WebkitOverflowScrolling: "touch" }}>
         <svg width={gridW + 8} height={gridH + 8} viewBox={`0 0 ${gridW + 8} ${gridH + 8}`}
           style={{ display: "block", margin: "0 auto" }}>
           <rect x={0} y={0} width={gridW + 8} height={gridH + 8} fill="none" />

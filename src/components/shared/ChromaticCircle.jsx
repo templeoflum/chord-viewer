@@ -6,7 +6,7 @@ export default function ChromaticCircle({ root, activeNotes, dimNotes, onNoteCli
 
   return (
     <div style={{ marginTop: "4px" }}>
-      <svg width="200" height="200" viewBox="-105 -105 210 210">
+      <svg viewBox="-105 -105 210 210" style={{ width: "100%", maxWidth: "200px", display: "block", touchAction: "manipulation" }}>
         <circle cx={0} cy={0} r={88} fill="none" stroke={COLORS.borderDim} strokeWidth={0.8} />
         {/* Dim notes polygon (background layer) */}
         {dimNotes && dimNotes.length > 1 && (
@@ -37,6 +37,7 @@ export default function ChromaticCircle({ root, activeNotes, dimNotes, onNoteCli
           const isR = i === 0;
           return (
             <g key={i} onClick={() => onNoteClick(actual)} style={{ cursor: "pointer" }}>
+              <circle cx={x} cy={y} r={16} fill="transparent" />
               {active && <circle cx={x} cy={y} r={12} fill={isR ? COLORS.accentBright : COLORS.accent} opacity={0.9} />}
               {!active && dim && <circle cx={x} cy={y} r={10} fill="#4a3280" opacity={0.5} />}
               <text x={x} y={y + 1} textAnchor="middle" dominantBaseline="central"

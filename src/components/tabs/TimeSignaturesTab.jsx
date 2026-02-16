@@ -30,8 +30,8 @@ export default function TimeSignaturesTab() {
 
       {/* Beat visualization */}
       <div style={{ overflowX: "auto" }}>
-        <svg width={vizW} height={vizH} viewBox={`0 0 ${vizW} ${vizH}`}
-          style={{ display: "block", margin: "0 auto" }}>
+        <svg viewBox={`0 0 ${vizW} ${vizH}`}
+          style={{ width: "100%", maxWidth: vizW + "px", display: "block", margin: "0 auto" }}>
           {selected.accents.map((accent, i) => {
             const cx = 10 + beatGap / 2 + i * beatGap;
             const cy = vizH / 2;

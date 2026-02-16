@@ -51,7 +51,7 @@ function fmtTime(ms) {
 }
 
 const cellStyle = {
-  padding: "5px 12px", textAlign: "right",
+  padding: "7px 12px", textAlign: "right",
   borderBottom: "1px solid " + COLORS.borderDark, whiteSpace: "nowrap",
 };
 const headerCellStyle = {
@@ -95,7 +95,7 @@ export default function TempoTab() {
       <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "12px", width: "100%", maxWidth: "500px" }}>
         <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
           <button onClick={() => setBpm(b => Math.max(1, b - 1))} style={{
-            padding: "6px 14px", fontSize: "16px", background: COLORS.surfaceDark,
+            padding: "8px 16px", fontSize: "16px", background: COLORS.surfaceDark,
             color: COLORS.text, border: "1px solid " + COLORS.borderDark,
             borderRadius: "6px", cursor: "pointer", fontFamily: "inherit",
           }}>&minus;</button>
@@ -107,7 +107,7 @@ export default function TempoTab() {
               borderRadius: "6px", fontFamily: "inherit", outline: "none",
             }} />
           <button onClick={() => setBpm(b => Math.min(300, b + 1))} style={{
-            padding: "6px 14px", fontSize: "16px", background: COLORS.surfaceDark,
+            padding: "8px 16px", fontSize: "16px", background: COLORS.surfaceDark,
             color: COLORS.text, border: "1px solid " + COLORS.borderDark,
             borderRadius: "6px", cursor: "pointer", fontFamily: "inherit",
           }}>+</button>
@@ -118,7 +118,7 @@ export default function TempoTab() {
         <div style={{ display: "flex", gap: "6px", flexWrap: "wrap", justifyContent: "center" }}>
           {[60, 80, 100, 120, 140, 160, 180, 200].map(v => (
             <button key={v} onClick={() => setBpm(v)} style={{
-              padding: "4px 10px", fontSize: "12px", fontWeight: bpm === v ? 700 : 400,
+              padding: "6px 12px", fontSize: "12px", fontWeight: bpm === v ? 700 : 400,
               background: bpm === v ? COLORS.accent : COLORS.surfaceDark,
               color: bpm === v ? "#fff" : COLORS.muted,
               border: "1px solid " + (bpm === v ? COLORS.accent : COLORS.borderDark),

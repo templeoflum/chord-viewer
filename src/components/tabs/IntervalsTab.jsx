@@ -28,7 +28,7 @@ export default function IntervalsTab() {
             background: value === i ? COLORS.accentBright : isBlackNote(i) ? COLORS.surfaceDark : COLORS.surface,
             color: value === i ? COLORS.bg : isBlackNote(i) ? "#777" : "#bbb",
             border: "1px solid " + (value === i ? COLORS.accentBright : COLORS.border),
-            borderRadius: "6px", cursor: "pointer", fontFamily: "inherit", minWidth: "38px", transition: "all 0.15s",
+            borderRadius: "6px", cursor: "pointer", fontFamily: "inherit", minWidth: "42px", transition: "all 0.15s",
           }}>{note}</button>
         ))}
       </div>
@@ -99,7 +99,7 @@ export default function IntervalsTab() {
             <div style={{ display: "flex", gap: "5px", flexWrap: "wrap", justifyContent: "center", maxWidth: "600px" }}>
               {INTERVAL_FULL_NAMES.map(iv => (
                 <button key={iv.semitones} onClick={() => setSelectedInterval(iv.semitones)} style={{
-                  padding: "6px 10px", fontSize: "12px", fontWeight: selectedInterval === iv.semitones ? 700 : 400,
+                  padding: "8px 12px", fontSize: "12px", fontWeight: selectedInterval === iv.semitones ? 700 : 400,
                   background: selectedInterval === iv.semitones ? COLORS.accent : COLORS.surfaceDark,
                   color: selectedInterval === iv.semitones ? "#fff" : COLORS.muted,
                   border: "1px solid " + (selectedInterval === iv.semitones ? COLORS.accent : COLORS.borderDark),
