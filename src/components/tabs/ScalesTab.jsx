@@ -4,7 +4,7 @@ import {
   getDiatonicChords, CHORD_TYPES, INTERVAL_NAMES, getParentScale,
 } from "../../utils/musicConstants.js";
 
-const PIANO_KEYS = 25;
+const PIANO_KEYS = 13;
 import PianoKeyboard from "../shared/PianoKeyboard.jsx";
 import ChromaticCircle from "../shared/ChromaticCircle.jsx";
 
@@ -105,7 +105,7 @@ export default function ScalesTab() {
         )}
       </div>
 
-      <PianoKeyboard activeKeys={showActiveKeys} dimKeys={showDimKeys} onKeyClick={setRoot} />
+      <PianoKeyboard activeKeys={showActiveKeys} dimKeys={showDimKeys} onKeyClick={setRoot} totalKeys={PIANO_KEYS} />
 
       {/* Root selector */}
       <div style={{ display: "flex", gap: "6px", flexWrap: "wrap", justifyContent: "center", maxWidth: "520px" }}>
