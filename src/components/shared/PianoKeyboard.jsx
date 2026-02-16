@@ -1,14 +1,20 @@
 import { useMemo } from "react";
-import { NOTES, isBlackNote, TOTAL_KEYS, WHITE_COUNT, COLORS } from "../../utils/musicConstants.js";
+import { NOTES, isBlackNote, COLORS } from "../../utils/musicConstants.js";
 
-export default function PianoKeyboard({ activeKeys, dimKeys, onKeyClick }) {
+export default function PianoKeyboard({ activeKeys, dimKeys, onKeyClick, totalKeys = 25 }) {
   const pianoData = useMemo(() => {
+    // Count white keys for this totalKeys value
+    let whiteCount = 0;
+    for (let i = 0; i < totalKeys; i++) {
+      if (!isBlackNote(i % 12)) whiteCount++;
+    }
+
     const whites = [];
     const blacks = [];
-    const whiteW = 100 / WHITE_COUNT;
+    const whiteW = 100 / whiteCount;
     let wIdx = 0;
 
-    for (let i = 0; i < TOTAL_KEYS; i++) {
+    for (let i = 0; i < totalKeys; i++) {
       const noteInOctave = i % 12;
       if (!isBlackNote(noteInOctave)) {
         const isActive = activeKeys.has(i);
@@ -26,7 +32,7 @@ export default function PianoKeyboard({ activeKeys, dimKeys, onKeyClick }) {
     }
 
     wIdx = 0;
-    for (let i = 0; i < TOTAL_KEYS; i++) {
+    for (let i = 0; i < totalKeys; i++) {
       const noteInOctave = i % 12;
       if (isBlackNote(noteInOctave)) {
         const isActive = activeKeys.has(i);
@@ -45,7 +51,7 @@ export default function PianoKeyboard({ activeKeys, dimKeys, onKeyClick }) {
     }
 
     return { whites, blacks };
-  }, [activeKeys, dimKeys]);
+  }, [activeKeys, dimKeys, totalKeys]);
 
   return (
     <div style={{ width: "100%", maxWidth: "1000px" }}>

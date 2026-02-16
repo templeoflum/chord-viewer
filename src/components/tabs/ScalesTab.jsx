@@ -1,8 +1,10 @@
 import { useState, useMemo } from "react";
 import {
-  NOTES, isBlackNote, SCALE_TYPES, SCALE_DEGREE_LABELS, COLORS, TOTAL_KEYS,
+  NOTES, isBlackNote, SCALE_TYPES, SCALE_DEGREE_LABELS, COLORS,
   getDiatonicChords, CHORD_TYPES, INTERVAL_NAMES, getParentScale,
 } from "../../utils/musicConstants.js";
+
+const PIANO_KEYS = 25;
 import PianoKeyboard from "../shared/PianoKeyboard.jsx";
 import ChromaticCircle from "../shared/ChromaticCircle.jsx";
 
@@ -34,10 +36,10 @@ export default function ScalesTab() {
   // Scale notes as dim keys (background layer)
   const scaleKeys = useMemo(() => {
     const map = new Map();
-    for (let octaveOffset = 0; octaveOffset < TOTAL_KEYS; octaveOffset += 12) {
+    for (let octaveOffset = 0; octaveOffset < PIANO_KEYS; octaveOffset += 12) {
       intervals.forEach((iv, idx) => {
         const pos = root + octaveOffset + iv;
-        if (pos >= 0 && pos < TOTAL_KEYS) {
+        if (pos >= 0 && pos < PIANO_KEYS) {
           const label = idx < SCALE_DEGREE_LABELS.length ? SCALE_DEGREE_LABELS[idx] : (idx + 1).toString();
           map.set(pos, label);
         }
@@ -65,10 +67,10 @@ export default function ScalesTab() {
 
     // Build active keys for chord
     const activeMap = new Map();
-    for (let octaveOffset = 0; octaveOffset < TOTAL_KEYS; octaveOffset += 12) {
+    for (let octaveOffset = 0; octaveOffset < PIANO_KEYS; octaveOffset += 12) {
       for (const iv of chordIntervals) {
         const pos = chordRoot + octaveOffset + iv;
-        if (pos >= 0 && pos < TOTAL_KEYS) {
+        if (pos >= 0 && pos < PIANO_KEYS) {
           activeMap.set(pos, INTERVAL_NAMES[iv]);
         }
       }

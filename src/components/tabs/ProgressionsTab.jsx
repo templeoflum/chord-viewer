@@ -1,8 +1,10 @@
 import { useState, useMemo } from "react";
 import {
   NOTES, isBlackNote, COLORS, COMMON_PROGRESSIONS, resolveProgression,
-  CHORD_TYPES, INTERVAL_NAMES, TOTAL_KEYS,
+  INTERVAL_NAMES,
 } from "../../utils/musicConstants.js";
+
+const PIANO_KEYS = 25;
 import PianoKeyboard from "../shared/PianoKeyboard.jsx";
 import ChromaticCircle from "../shared/ChromaticCircle.jsx";
 
@@ -24,7 +26,7 @@ export default function ProgressionsTab() {
     const chordRoot = currentChord.root !== undefined ? currentChord.root : root;
     for (const iv of currentChord.intervals) {
       const pos = chordRoot + iv;
-      if (pos >= 0 && pos < TOTAL_KEYS) {
+      if (pos >= 0 && pos < PIANO_KEYS) {
         map.set(pos, INTERVAL_NAMES[iv]);
       }
     }

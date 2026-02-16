@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import {
-  NOTES, isBlackNote, INTERVAL_NAMES, CHORD_TYPES, CHORD_CATEGORIES, COLORS, TOTAL_KEYS,
+  NOTES, isBlackNote, INTERVAL_NAMES, CHORD_TYPES, CHORD_CATEGORIES, COLORS,
   getInversion,
 } from "../../utils/musicConstants.js";
 import PianoKeyboard from "../shared/PianoKeyboard.jsx";
@@ -22,19 +22,21 @@ export default function ChordsTab() {
     [baseIntervals, clampedInversion]
   );
 
-  // Reset inversion if chord type changes and inversion is out of range
   const effectiveInversion = clampedInversion;
+
+  // Use 3 octaves only when intervals exceed one octave (extended chords / inversions)
+  const totalKeys = Math.max(...intervals) > 12 ? 37 : 25;
 
   const activeKeys = useMemo(() => {
     const map = new Map();
     for (const iv of intervals) {
       const pos = root + iv;
-      if (pos >= 0 && pos < TOTAL_KEYS) {
+      if (pos >= 0 && pos < totalKeys) {
         map.set(pos, INTERVAL_NAMES[iv] || INTERVAL_NAMES[iv % 12] || "");
       }
     }
     return map;
-  }, [root, intervals]);
+  }, [root, intervals, totalKeys]);
 
   const chordName = NOTES[root] + (
     chordType === "Major" ? "" :
@@ -85,7 +87,7 @@ export default function ChordsTab() {
         ))}
       </div>
 
-      <PianoKeyboard activeKeys={activeKeys} onKeyClick={setRoot} />
+      <PianoKeyboard activeKeys={activeKeys} onKeyClick={setRoot} totalKeys={totalKeys} />
 
       {/* Root selector */}
       <div style={{ display: "flex", gap: "6px", flexWrap: "wrap", justifyContent: "center", maxWidth: "520px" }}>
