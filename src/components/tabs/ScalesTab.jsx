@@ -4,7 +4,7 @@ import {
   getDiatonicChords, CHORD_TYPES, INTERVAL_NAMES, getParentScale,
 } from "../../utils/musicConstants.js";
 
-const BASE_OCTAVE = 13; // one octave span
+const PIANO_KEYS = 13;
 import PianoKeyboard from "../shared/PianoKeyboard.jsx";
 import ChromaticCircle from "../shared/ChromaticCircle.jsx";
 
@@ -32,22 +32,29 @@ export default function ScalesTab() {
   const [selectedDiatonic, setSelectedDiatonic] = useState(null);
 
   const intervals = SCALE_TYPES[scaleType];
-  const pianoKeys = root + BASE_OCTAVE; // enough keys to show full octave from root
 
-  // Scale notes as dim keys (background layer)
+  // Build a lookup: noteInOctave -> degree label
+  const scaleDegreeMap = useMemo(() => {
+    const m = new Map();
+    intervals.forEach((iv, idx) => {
+      const note = (root + iv) % 12;
+      const label = idx < SCALE_DEGREE_LABELS.length ? SCALE_DEGREE_LABELS[idx] : (idx + 1).toString();
+      m.set(note, label);
+    });
+    return m;
+  }, [root, intervals]);
+
+  // Scale notes as dim keys — wrap mod 12 so all keys in the scale light up
   const scaleKeys = useMemo(() => {
     const map = new Map();
-    for (let octaveOffset = 0; octaveOffset < pianoKeys; octaveOffset += 12) {
-      intervals.forEach((iv, idx) => {
-        const pos = root + octaveOffset + iv;
-        if (pos >= 0 && pos < pianoKeys) {
-          const label = idx < SCALE_DEGREE_LABELS.length ? SCALE_DEGREE_LABELS[idx] : (idx + 1).toString();
-          map.set(pos, label);
-        }
-      });
+    for (let i = 0; i < PIANO_KEYS; i++) {
+      const note = i % 12;
+      if (scaleDegreeMap.has(note)) {
+        map.set(i, scaleDegreeMap.get(note));
+      }
     }
     return map;
-  }, [root, intervals, pianoKeys]);
+  }, [scaleDegreeMap]);
 
   const scaleNotesMod12 = useMemo(
     () => [...new Set(intervals.map(i => (root + i) % 12))],
@@ -66,20 +73,24 @@ export default function ScalesTab() {
     const chordIntervals = CHORD_TYPES[quality];
     if (!chordIntervals) return null;
 
-    // Build active keys for chord
+    // Build a lookup: noteInOctave -> interval label
+    const chordNoteMap = new Map();
+    for (const iv of chordIntervals) {
+      chordNoteMap.set((chordRoot + iv) % 12, INTERVAL_NAMES[iv]);
+    }
+
+    // Map onto all piano keys via mod 12
     const activeMap = new Map();
-    for (let octaveOffset = 0; octaveOffset < pianoKeys; octaveOffset += 12) {
-      for (const iv of chordIntervals) {
-        const pos = chordRoot + octaveOffset + iv;
-        if (pos >= 0 && pos < pianoKeys) {
-          activeMap.set(pos, INTERVAL_NAMES[iv]);
-        }
+    for (let i = 0; i < PIANO_KEYS; i++) {
+      const note = i % 12;
+      if (chordNoteMap.has(note)) {
+        activeMap.set(i, chordNoteMap.get(note));
       }
     }
 
-    const notesMod12 = [...new Set(chordIntervals.map(i => (chordRoot + i) % 12))];
+    const notesMod12 = [...chordNoteMap.keys()];
     return { activeKeys: activeMap, notesMod12, chordRoot };
-  }, [selectedDiatonic, diatonicChords, root, intervals, scaleType, pianoKeys]);
+  }, [selectedDiatonic, diatonicChords, root, intervals, scaleType]);
 
   const parentInfo = useMemo(() => getParentScale(root, scaleType), [root, scaleType]);
 
@@ -106,7 +117,7 @@ export default function ScalesTab() {
         )}
       </div>
 
-      <PianoKeyboard activeKeys={showActiveKeys} dimKeys={showDimKeys} onKeyClick={setRoot} totalKeys={pianoKeys} />
+      <PianoKeyboard activeKeys={showActiveKeys} dimKeys={showDimKeys} onKeyClick={setRoot} totalKeys={PIANO_KEYS} />
 
       {/* Root selector */}
       <div style={{ display: "flex", gap: "6px", flexWrap: "wrap", justifyContent: "center", maxWidth: "520px" }}>
